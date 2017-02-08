@@ -1,0 +1,57 @@
+---
+title:  'Babynames demo'
+author: 'Robert McDonald'
+runtime: shiny
+---
+This uses Hadley Wickham's babynames, ggplot2, and dplyr packages to provide a
+simple Shiny interface to the data. Type a name and then hit  `<Enter>`.  Lookups are case-sensitive.
+
+```{r, echo=FALSE, message=FALSE}
+library(shiny)
+library(babynames)
+library(dplyr)
+library(ggplot2)
+
+shinyApp(
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+   
+   # Application title
+   titlePanel("Name Popularity, 1880-2014"),
+   
+   # Sidebar with a slider input for number of bins 
+   sidebarLayout(
+      sidebarPanel(
+         textInput("name", label="Name",
+                   value='James')
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+         plotOutput("namePlot", height = "600px") 
+      )
+   )
+),
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+   output$namePlot <- renderPlot({
+      # code to lookup name data and draw plot
+     babynames %>% 
+       filter(name==input$name) %>%
+       ggplot +
+       geom_point(mapping=aes(x=year, y=prop, color=sex)) +
+       labs(y='Proportion', x='Year') + 
+       ggtitle(paste0('Popularity for ', input$name)) +
+       theme_bw() + 
+       xlim(1880, 2014)
+   }
+   )
+},
+     options=list(height="10000px")   
+)
+# Run the application 
+```
+
+After the code...
