@@ -4,7 +4,11 @@ author: 'Robert McDonald'
 runtime: shiny
 ---
 This uses Hadley Wickham's babynames, ggplot2, and dplyr packages to provide a
-simple Shiny interface to the data. Type a name and then hit  `<Enter>`.  Lookups are case-sensitive.
+simple Shiny interface to the data. Type a name and then hit
+`<Enter>`.  Lookups are case-sensitive.
+
+The y-axis is the proportion of babies with that name, born in that
+year, who were registered for social security.
 
 ```{r, echo=FALSE, message=FALSE}
 library(shiny)
@@ -23,7 +27,7 @@ ui <- fluidPage(
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
-         textInput("name", label="Name",
+         textInput("name", label="Name (case-sensitive)",
                    value='James')
       ),
       

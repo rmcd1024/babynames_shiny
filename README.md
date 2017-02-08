@@ -10,7 +10,11 @@ output: "markdown_github"
 
 
 
-This implements a simple R shiny front-end to Hadley Wickham's [babynames R package](https://cran.r-project.org/web/packages/babynames/index.html).
+This implements a simple R shiny front-end to Hadley
+Wickham's
+[babynames R package](https://cran.r-project.org/web/packages/babynames/index.html). 
+
+The shiny page is [here](rmcd1024.shinyapps.io/babynames_shiny).
 
 The data set is a based on Social Security data and reports every name with more than 5 occurrences in a year.
 
