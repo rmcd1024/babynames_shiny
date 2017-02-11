@@ -1,0 +1,61 @@
+---
+title: "Your family's babynames"
+author: "Your name"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+This document uses Hadley Wickham's R package `babynames`, which
+contains 1.8 million name/year observations based on Social Security
+data. Specifically, the data contains every name in the social
+security records appearing  5 or more times in one year, and reports
+the number of occurrences and the proportion for the year, by gender. For example, in 1920, about 0.8% of females had the name 'Irene'.
+
+Note that the scale of the y axis differs across names. Also there are
+close variants that I ignore (for example "Judy" vs "Judith").
+
+\vspace{0.5in}
+
+```{r plotnames, echo=FALSE, fig.width=3.75, fig.height=3.75, message=FALSE}
+library(babynames); library(knitr); library(ggplot2); library(dplyr)
+
+## put your family names here
+namelist <- c('James', 'Mary')
+
+for (i in namelist) {
+  p = babynames %>% filter(name==i) %>%
+    ggplot +
+    geom_point(mapping=aes(x=year, y=prop, color=sex)) +
+    labs(y='Proportion', x='Year') +
+    ggtitle(paste('Popularity for', i)) + theme_bw() + 
+    xlim(1880, 2014)
+  print(p)
+}
+```
+
+
+\newpage
+The code, for those who might be interested:
+
+```{r, ref.label='plotnames', eval=FALSE}
+```
+
+```{r namecount, echo=FALSE}
+tmp = babynames %>% group_by(name, sex) %>% 
+  summarize(Total=sum(n)) %>% arrange(-Total)
+hd = head(tmp, n=10)
+bt = tail(tmp, n=10)
+```
+
+One last thing: Here are the top 10 and bottom 10 names in the data, by the
+number with that name (the bottom 10 are 
+obviously alphabetical; there are 
+`r format(sum(tmp$Total==5), big.mark=',')` names 
+that occur in exactly one year, 5 times.)
+
+```{r, echo=FALSE, results='asis'}
+kable(hd, caption='Ten most common names' )
+kable(bt, caption='Ten least common names')
+```
+
