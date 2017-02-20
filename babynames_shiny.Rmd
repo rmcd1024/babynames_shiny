@@ -55,7 +55,7 @@ ui <- fluidPage(
                        value=FALSE),
          checkboxInput("orderN",
                        label='Sort by Total',
-                       value=FALSE),
+                       value=TRUE),
          # textOutput('test'),
          tableOutput("nametbl")
       ),
@@ -89,11 +89,12 @@ server <- function(input, output) {
      bdisplay = b %>% 
        group_by(Name=name) %>%
        summarize(Total = sum(n))
-     #orderN = TRUE
-     output$nametbl = if (input$orderN)
-       renderTable(bdisplay %>% arrange(desc(Total)))
-     else
-       renderTable(bdisplay)
+     output$nametbl = 
+       if (input$orderN) {
+         renderTable(bdisplay %>% arrange(desc(Total)))
+       } else {
+         renderTable(bdisplay)
+       }
      ## The plot will only display if it is the last item, which is what the
      ## function returns. If the plot is not last, it needs to be assigned to a
      ## variable and returned explicitly
