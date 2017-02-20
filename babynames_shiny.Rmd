@@ -14,7 +14,7 @@ Shiny interface to the
 [Social Security names data](https://www.ssa.gov/oact/babynames/background.html). 
 Lookups are case-sensitive by default. 
 
-Code for this is available on [github](https://github.com/rmcd1024/babynames_shiny).
+Code for this is available on [github](https://github.com/rmcd1024/babynames_shiny). You can post comments on github or [email me](mailto:rmcd1024@gmail.com).
 
 Note that:
 
