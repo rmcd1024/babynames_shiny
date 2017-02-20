@@ -30,7 +30,6 @@ year, who were registered for social security.
 
 ```{r, echo=FALSE, message=FALSE}
 library(shiny)
-library(magrittr)
 library(babynames)
 library(dplyr)
 library(ggplot2)
@@ -53,6 +52,9 @@ ui <- fluidPage(
                        value=FALSE),
          checkboxInput("ignorecase",
                        label='Ignore capitalization',
+                       value=FALSE),
+         checkboxInput("orderN",
+                       label='Sort by Total',
                        value=FALSE),
          # textOutput('test'),
          tableOutput("nametbl")
@@ -84,10 +86,14 @@ server <- function(input, output) {
        group_by(name, sex, year)
      bprop = b %>% group_by(sex, year) %>%
        summarize(totprop = sum(prop))
-     output$nametbl = 
-       renderTable(b %>% 
-                     group_by(Name=name) %>%
-                     summarize(Total = sum(n)))
+     bdisplay = b %>% 
+       group_by(Name=name) %>%
+       summarize(Total = sum(n))
+     #orderN = TRUE
+     output$nametbl = if (input$orderN)
+       renderTable(bdisplay %>% arrange(desc(Total)))
+     else
+       renderTable(bdisplay)
      ## The plot will only display if it is the last item, which is what the
      ## function returns. If the plot is not last, it needs to be assigned to a
      ## variable and returned explicitly
