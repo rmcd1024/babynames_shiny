@@ -10,7 +10,7 @@ output: "markdown_github"
 
 
 
-This implements a simple R shiny front-end to Hadley
+This implements an R shiny front-end to Hadley
 Wickham's
 [babynames R package](https://cran.r-project.org/web/packages/babynames/index.html). 
 
