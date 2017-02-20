@@ -1,2 +1,4 @@
 *.htm*
 *rsconnect
+shinytest.Rmd
+shinyerror.txt

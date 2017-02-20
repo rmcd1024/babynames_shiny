@@ -3,9 +3,19 @@ title:  'Babynames demo'
 author: 'Robert McDonald'
 runtime: shiny
 ---
-This uses Hadley Wickham's babynames, ggplot2, and dplyr packages to provide a
-simple Shiny interface to the data. Type a name and then hit
-`<Enter>`.  Lookups are case-sensitive.
+This uses [Hadley Wickham's](https://github.com/hadley/) R packages
+[babynames](https://cran.r-project.org/package=babynames),
+[ggplot2](https://cran.r-project.org/package=ggplot2), and 
+[dplyr](https://cran.r-project.org/package=dplyr) to provide a
+simple Shiny interface to the 
+[Social Security names data](https://www.ssa.gov/oact/babynames/background.html). 
+You simply type a name. Lookups are case-sensitive by default.
+
+Note that:
+
+* By checking the "Partial name match" box, you will get every name which contains the name you enter. Try checking the box
+* In most cases, checking the "Ignore capitalization" box will matter only when you also check the "Partial name match" box. 
+* The "Data" list contains all the names included in the plot
 
 The y-axis is the proportion of babies with that name, born in that
 year, who were registered for social security.
@@ -28,7 +38,14 @@ ui <- fluidPage(
    sidebarLayout(
       sidebarPanel(
          textInput("name", label="Name (case-sensitive)",
-                   value='James')
+                   value='James'),
+         checkboxInput("partial",
+                       label='Partial name match',
+                       value=FALSE),
+         checkboxInput("ignorecase",
+                       label='Ignore capitalization',
+                       value=FALSE),
+         tableOutput("nametbl")
       ),
       
       # Show a plot of the generated distribution
@@ -42,20 +59,34 @@ ui <- fluidPage(
 server <- function(input, output) {
    output$namePlot <- renderPlot({
       # code to lookup name data and draw plot
+     nametofind = ifelse(input$partial, 
+                         input$name,
+                         paste0("^", input$name, "$"))
+     namelist = unique(grep(nametofind, babynames$name,
+                     ignore.case=input$ignorecase,
+                     value=TRUE))
+     caption = "Popularity of"
+     if (input$partial) caption = paste(caption, 'names containing')
+     caption = paste(caption, input$name)
+     if (input$ignorecase) caption = paste(caption, '(not case sensitive)')
+     output$nametbl = renderTable(namelist)
      babynames %>% 
-       filter(name==input$name) %>%
+       filter(name %in% namelist) %>%
+       group_by(sex, year) %>%
+       summarize(totprop = sum(prop)) %>%
        ggplot +
-       geom_point(mapping=aes(x=year, y=prop, color=sex)) +
+       geom_point(mapping=aes(x=year, y=totprop, color=sex)) +
        labs(y='Proportion', x='Year') + 
-       ggtitle(paste0('Popularity for ', input$name)) +
+       ggtitle(caption) +
        theme_bw() + 
        xlim(1880, 2014)
-   }
+   },
+   height=450
    )
 },
-     options=list(height="10000px")   
+     options=list(height="1000px")   
+
 )
 # Run the application 
 ```
 
-After the code...
