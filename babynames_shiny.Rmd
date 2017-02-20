@@ -34,13 +34,16 @@ library(babynames)
 library(dplyr)
 library(ggplot2)
 
+minyr = min(babynames$year)
+maxyr = max(babynames$year)
+
 shinyApp(
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Name Popularity, 1880-2014"),
+   titlePanel(paste0("Name Popularity, ", minyr, "-", maxyr)),
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -103,7 +106,7 @@ server <- function(input, output) {
        labs(y='Proportion', x='Year') + 
        ggtitle(caption) +
        theme_bw() + 
-       xlim(1880, 2014)
+       xlim(minyr, maxyr)
    },
    height=400
    )
