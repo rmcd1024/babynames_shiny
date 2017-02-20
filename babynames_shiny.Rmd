@@ -30,6 +30,7 @@ year, who were registered for social security.
 
 ```{r, echo=FALSE, message=FALSE}
 library(shiny)
+library(magrittr)
 library(babynames)
 library(dplyr)
 library(ggplot2)
@@ -53,6 +54,7 @@ ui <- fluidPage(
          checkboxInput("ignorecase",
                        label='Ignore capitalization',
                        value=FALSE),
+         # textOutput('test'),
          tableOutput("nametbl")
       ),
       
@@ -77,12 +79,19 @@ server <- function(input, output) {
      if (input$partial) caption = paste(caption, 'names containing')
      caption = paste(caption, input$name)
      if (input$ignorecase) caption = paste(caption, '(not case sensitive)')
-     output$nametbl = renderTable(namelist)
-     babynames %>% 
+     b = babynames %>% 
        filter(name %in% namelist) %>%
-       group_by(sex, year) %>%
-       summarize(totprop = sum(prop)) %>%
-       ggplot +
+       group_by(name, sex, year)
+     bprop = b %>% group_by(sex, year) %>%
+       summarize(totprop = sum(prop))
+     output$nametbl = 
+       renderTable(b %>% 
+                     group_by(Name=name) %>%
+                     summarize(Total = sum(n)))
+     ## The plot will only display if it is the last item, which is what the
+     ## function returns. If the plot is not last, it needs to be assigned to a
+     ## variable and returned explicitly
+     ggplot(bprop) +
        geom_point(mapping=aes(x=year, y=totprop, color=sex)) +
        labs(y='Proportion', x='Year') + 
        ggtitle(caption) +
