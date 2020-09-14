@@ -6,24 +6,17 @@ runtime: shiny
 
 <!-- Version 0.2 -->
 
-This uses [Hadley Wickham's](https://github.com/hadley/) R packages
+This uses the R packages
 [babynames](https://cran.r-project.org/package=babynames),
 [ggplot2](https://cran.r-project.org/package=ggplot2), and 
 [dplyr](https://cran.r-project.org/package=dplyr) to provide a
 Shiny interface to the 
 [Social Security names data](https://www.ssa.gov/oact/babynames/background.html). 
-Lookups are case-sensitive by default. 
+Code is available on [github](https://github.com/rmcd1024/babynames_shiny). Comments are welcome on github or [email](mailto:rmcd1024@gmail.com). Note that:
 
-Code for this is available on [github](https://github.com/rmcd1024/babynames_shiny). You can post comments on github or [email me](mailto:rmcd1024@gmail.com).
-
-Note that:
-
-* By checking the "Partial name match" box, you will get every name which
-contains the name you enter. Try entering the name "Jam" and checking the box.
-* In most cases, checking the "Ignore capitalization" box will matter only when
-you also check the "Partial name match" box. If you check both "Partial name
-match" and "Ignore capitalization", a search for "Ja" will include "Alejandro", for example.
-* The "Data" list contains all the names included in the plot
+* "Partial name match" will match every name containing the search string.
+* "Ignore capitalization" should matter only when "Partial name match" is checked
+* The Name table contains all the names included in the plot
 
 The y-axis is the proportion of babies with that name, born in that
 year, who were registered for social security.
