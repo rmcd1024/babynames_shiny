@@ -59,8 +59,13 @@ ui <- fluidPage(
          checkboxInput("orderN",
                        label='Sort by Total',
                        value=TRUE),
+         checkboxInput("showsex",
+                       label="Separate names by sex", 
+                       value=FALSE),
          # textOutput('test'),
+         textOutput("total_n"),
          tableOutput("nametbl")
+         ,textOutput("total_names")
       ),
       
       # Show a plot of the generated distribution
@@ -89,15 +94,24 @@ server <- function(input, output) {
        group_by(name, sex, year)
      bprop = b %>% group_by(sex, year) %>%
        summarize(totprop = sum(prop))
-     bdisplay = b %>% 
-       group_by(Name=name) %>%
-       summarize(Total = sum(n))
+     bdisplay = if (input$showsex) {
+        b %>% 
+           group_by(Name=name, Sex=sex) %>%
+           summarize(Total = sum(n))
+     } else {
+        b %>%
+           group_by(Name=name) %>%
+           summarize(Total = sum(n))
+     }
      output$nametbl = 
        if (input$orderN) {
          renderTable(bdisplay %>% arrange(desc(Total)))
        } else {
          renderTable(bdisplay)
        }
+     output$total_names = renderText(paste0('Distinct names: ',
+                                        length(unique(bdisplay$Name))))
+     output$total_n = renderText(paste0('Total: ', format(sum(b$n), big.mark=',')))
      ## The plot will only display if it is the last item, which is what the
      ## function returns. If the plot is not last, it needs to be assigned to a
      ## variable and returned explicitly
