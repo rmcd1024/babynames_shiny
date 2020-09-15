@@ -8,13 +8,16 @@ runtime: shiny
 
 This uses the R packages
 [babynames](https://cran.r-project.org/package=babynames),
-[ggplot2](https://cran.r-project.org/package=ggplot2), and 
-[dplyr](https://cran.r-project.org/package=dplyr) to provide a
-Shiny interface to the 
-[Social Security names data](https://www.ssa.gov/oact/babynames/background.html). 
-Code is available on [github](https://github.com/rmcd1024/babynames_shiny). Comments are welcome on github or [email](mailto:rmcd1024@gmail.com). Note that:
+[dplyr](https://cran.r-project.org/package=dplyr), and
+[ggplot2](https://cran.r-project.org/package=ggplot2) to provide a
+Shiny interface to the [Social Security names
+data](https://www.ssa.gov/oact/babynames/background.html).  Code is
+[available on
+github](https://github.com/rmcd1024/babynames_shiny). Comments are
+welcome on github or [email](mailto:rmcd1024@gmail.com). Note that:
 
-* "Partial name match" will match every name containing the search string.
+* "Partial name match" will return every name matching the search
+  string (which can be a regular expression).
 * "Ignore capitalization" should matter only when "Partial name match" is checked
 * The Name table contains all the names included in the plot
 
@@ -44,7 +47,7 @@ ui <- fluidPage(
          textInput("name", label="Name (case-sensitive)",
                    value='James'),
          checkboxInput("partial",
-                       label='Partial name match',
+                       label='Partial name match (regex)',
                        value=FALSE),
          checkboxInput("ignorecase",
                        label='Ignore capitalization',
