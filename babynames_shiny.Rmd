@@ -4,12 +4,13 @@ author: 'Robert McDonald'
 runtime: shiny
 ---
 
-<!-- Version 0.2 -->
+<!-- Version 0.3 -->
 
 This uses the R packages
 [babynames](https://cran.r-project.org/package=babynames),
-[dplyr](https://cran.r-project.org/package=dplyr), and
-[ggplot2](https://cran.r-project.org/package=ggplot2) to provide a
+[dplyr](https://cran.r-project.org/package=dplyr),
+[ggplot2](https://cran.r-project.org/package=ggplot2), and
+[DT](https://cran.r-project.org/package=DT) to provide a
 Shiny interface to the [Social Security names
 data](https://www.ssa.gov/oact/babynames/background.html).  Code is
 [available on
@@ -29,6 +30,7 @@ library(shiny)
 library(babynames)
 library(dplyr)
 library(ggplot2)
+library(DT)
 
 minyr = min(babynames$year)
 maxyr = max(babynames$year)
@@ -58,10 +60,8 @@ ui <- fluidPage(
          checkboxInput("showsex",
                        label="Separate names by sex", 
                        value=FALSE),
-         # textOutput('test'),
          textOutput("total_n"),
-         tableOutput("nametbl")
-         ,textOutput("total_names")
+         DTOutput("nametbl")
       ),
       
       # Show a plot of the generated distribution
@@ -100,13 +100,11 @@ server <- function(input, output) {
            summarize(Total = sum(n))
      }
      output$nametbl = 
-       if (input$orderN) {
-         renderTable(bdisplay %>% arrange(desc(Total)))
-       } else {
-         renderTable(bdisplay)
-       }
-     output$total_names = renderText(paste0('Distinct names: ',
-                                        length(unique(bdisplay$Name))))
+        if (input$orderN) {
+           renderDT(bdisplay %>% arrange(desc(Total)))   
+        } else {
+           renderDT(bdisplay)
+        }
      output$total_n = renderText(paste0('Total: ', format(sum(b$n), big.mark=',')))
      ## The plot will only display if it is the last item, which is what the
      ## function returns. If the plot is not last, it needs to be assigned to a
