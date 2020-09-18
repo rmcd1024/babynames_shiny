@@ -105,7 +105,11 @@ server <- function(input, output) {
         } else {
            renderDT(bdisplay)
         }
-     output$total_n = renderText(paste0('Total: ', format(sum(b$n), big.mark=',')))
+     output$total_n = renderText(paste0('Total: ', format(sum(b$n), big.mark=','),
+                                        ';  ',
+                                        'Distinct:', format(length(unique(b$name)),
+                                                            big.mark=',')))
+     ## The plot will only display if it is the last item, which is what the))
      ## The plot will only display if it is the last item, which is what the
      ## function returns. If the plot is not last, it needs to be assigned to a
      ## variable and returned explicitly
